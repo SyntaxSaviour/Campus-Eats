@@ -3,8 +3,7 @@
 
 CampusEats is a web application that enables students to order food from campus restaurants and get it delivered directly to dorms or buildings. The platform provides a seamless user experience with authentication, real-time order tracking, and secure payment integration, making campus food ordering simple and efficient.
 
-## Demo Link
-https://campus-eats-dqvh.onrender.com
+
 # Features
 
 - Student and Restaurant Owner dashboards
