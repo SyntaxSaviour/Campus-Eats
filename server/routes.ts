@@ -1,0 +1,216 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { 
+  studentSignupSchema, 
+  restaurantSignupSchema, 
+  loginSchema,
+  insertRestaurantSchema,
+  insertMenuItemSchema,
+  insertOrderSchema
+} from "@shared/schema";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication routes
+  app.post("/api/auth/student/signup", async (req, res) => {
+    try {
+      const validatedData = studentSignupSchema.parse(req.body);
+      
+      // Check if email already exists
+      const existingUser = await storage.getUserByEmail(validatedData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const user = await storage.createUser(validatedData);
+      
+      // Don't send password back
+      const { password, ...userWithoutPassword } = user;
+      res.status(201).json({ user: userWithoutPassword });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/auth/restaurant/signup", async (req, res) => {
+    try {
+      const validatedData = restaurantSignupSchema.parse(req.body);
+      
+      // Check if email already exists
+      const existingUser = await storage.getUserByEmail(validatedData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const user = await storage.createUser(validatedData);
+      
+      // Create restaurant profile
+      const restaurant = await storage.createRestaurant({
+        userId: user.id,
+        name: user.name,
+        description: "",
+        cuisine: "Various",
+        deliveryTime: "30-45 min",
+        priceForTwo: 500,
+        imageUrl: "",
+      });
+      
+      // Don't send password back
+      const { password, ...userWithoutPassword } = user;
+      res.status(201).json({ user: userWithoutPassword, restaurant });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = loginSchema.parse(req.body);
+      
+      const user = await storage.getUserByEmail(email);
+      if (!user || user.password !== password) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Get restaurant data if user is a restaurant owner
+      let restaurant = null;
+      if (user.role === "restaurant") {
+        restaurant = await storage.getRestaurantByUserId(user.id);
+      }
+
+      const { password: _, ...userWithoutPassword } = user;
+      res.json({ user: userWithoutPassword, restaurant });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Restaurant routes
+  app.get("/api/restaurants", async (req, res) => {
+    try {
+      const restaurants = await storage.getRestaurants();
+      res.json(restaurants);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/restaurants/:id", async (req, res) => {
+    try {
+      const restaurant = await storage.getRestaurant(req.params.id);
+      if (!restaurant) {
+        return res.status(404).json({ message: "Restaurant not found" });
+      }
+      res.json(restaurant);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.put("/api/restaurants/:id", async (req, res) => {
+    try {
+      const updates = req.body;
+      const restaurant = await storage.updateRestaurant(req.params.id, updates);
+      if (!restaurant) {
+        return res.status(404).json({ message: "Restaurant not found" });
+      }
+      res.json(restaurant);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Menu routes
+  app.get("/api/restaurants/:restaurantId/menu", async (req, res) => {
+    try {
+      const menuItems = await storage.getMenuItems(req.params.restaurantId);
+      res.json(menuItems);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/restaurants/:restaurantId/menu", async (req, res) => {
+    try {
+      const menuItemData = insertMenuItemSchema.parse({
+        ...req.body,
+        restaurantId: req.params.restaurantId,
+      });
+      
+      const menuItem = await storage.createMenuItem(menuItemData);
+      res.status(201).json(menuItem);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.put("/api/menu-items/:id", async (req, res) => {
+    try {
+      const updates = req.body;
+      const menuItem = await storage.updateMenuItem(req.params.id, updates);
+      if (!menuItem) {
+        return res.status(404).json({ message: "Menu item not found" });
+      }
+      res.json(menuItem);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/menu-items/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteMenuItem(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Menu item not found" });
+      }
+      res.status(204).send();
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Order routes
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const orderData = insertOrderSchema.parse(req.body);
+      const order = await storage.createOrder(orderData);
+      res.status(201).json(order);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/orders/student/:studentId", async (req, res) => {
+    try {
+      const orders = await storage.getOrdersByStudent(req.params.studentId);
+      res.json(orders);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/orders/restaurant/:restaurantId", async (req, res) => {
+    try {
+      const orders = await storage.getOrdersByRestaurant(req.params.restaurantId);
+      res.json(orders);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.put("/api/orders/:id", async (req, res) => {
+    try {
+      const updates = req.body;
+      const order = await storage.updateOrder(req.params.id, updates);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.json(order);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
