@@ -85,27 +85,18 @@ This project was developed for the Liftoff Tech Club assignment. Contributions a
 
 # Acknowledgements
 
-- [Lovable.dev](https://lovable.dev/)– for templates
+- [Lovable.dev](https://lovable.dev/) – for templates
 
-- [Replit](https://replit.com/)- for AI integration
+- [Replit](https://replit.com/) - for AI integration
 
-- [Supabase](https://supabase.com/)– for authentication and database
+- [Supabase](https://supabase.com/) – for authentication and database
 
-- [Stripe](https://stripe.com/in)– for payments integration
+- [Stripe](https://stripe.com/in) – for payments integration
 
 - Mockaroo – for generating test data
 
 
-## Deployment
-
-To deploy this project run
-
-```bash
-  npm run deploy
-```
-
-
-## License
+# License
 
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
 
