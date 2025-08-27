@@ -40,6 +40,13 @@ export function Navbar() {
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-4">
+                <Link 
+                  href={user?.role === 'student' ? '/student/dashboard' : '/restaurant/dashboard'} 
+                  className="text-muted-foreground hover:text-primary transition-colors" 
+                  data-testid="nav-dashboard"
+                >
+                  Dashboard
+                </Link>
                 <span className="text-sm text-muted-foreground" data-testid="user-greeting">
                   Welcome, {user?.name}!
                 </span>
@@ -98,6 +105,14 @@ export function Navbar() {
                 <div className="text-sm text-muted-foreground border-b border-border pb-2" data-testid="mobile-user-greeting">
                   Welcome, {user?.name}!
                 </div>
+                <Link 
+                  href={user?.role === 'student' ? '/student/dashboard' : '/restaurant/dashboard'}
+                  className="block w-full text-left text-muted-foreground hover:text-primary transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                  data-testid="mobile-nav-dashboard"
+                >
+                  Dashboard
+                </Link>
                 <Button 
                   variant="outline" 
                   className="w-full"

@@ -1,40 +1,69 @@
 import { Link } from "wouter";
-import { GraduationCap, Store, Clock, University, Wallet } from "lucide-react";
+import { GraduationCap, Store, Clock, University, Wallet, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Home() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <main className="pt-16 min-h-screen" data-testid="home-page">
       {/* Hero Section */}
       <section className="hero-gradient py-20 px-4" data-testid="hero-section">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" data-testid="hero-title">
-            Hungry? We've got you covered!
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto" data-testid="hero-description">
-            Order from your favorite campus restaurants and get food delivered right to your dorm or study spot.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6 max-w-lg mx-auto">
-            <Link href="/auth/student/signup">
-              <Button 
-                className="bg-white/20 backdrop-blur-md border border-white/30 text-white py-4 px-8 rounded-xl font-semibold hover:bg-white/30 transition-all card-hover w-full h-auto"
-                data-testid="student-signup-button"
-              >
-                <GraduationCap className="mr-3" />
-                I'm a Student
-              </Button>
-            </Link>
-            <Link href="/auth/restaurant/signup">
-              <Button 
-                className="bg-white/20 backdrop-blur-md border border-white/30 text-white py-4 px-8 rounded-xl font-semibold hover:bg-white/30 transition-all card-hover w-full h-auto"
-                data-testid="restaurant-signup-button"
-              >
-                <Store className="mr-3" />
-                I'm a Restaurant
-              </Button>
-            </Link>
-          </div>
+          {isAuthenticated ? (
+            // Authenticated user hero
+            <>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" data-testid="hero-title">
+                Welcome back, {user?.name}!
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto" data-testid="hero-description">
+                {user?.role === 'student' 
+                  ? "Ready to order your favorite food? Browse restaurants and track your orders."
+                  : "Manage your restaurant, view orders, and serve your customers better."}
+              </p>
+              <Link href={user?.role === 'student' ? '/student/dashboard' : '/restaurant/dashboard'}>
+                <Button 
+                  className="bg-white/20 backdrop-blur-md border border-white/30 text-white py-4 px-8 rounded-xl font-semibold hover:bg-white/30 transition-all card-hover"
+                  data-testid="dashboard-button"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="ml-3" />
+                </Button>
+              </Link>
+            </>
+          ) : (
+            // Non-authenticated user hero
+            <>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" data-testid="hero-title">
+                Hungry? We've got you covered!
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto" data-testid="hero-description">
+                Order from your favorite campus restaurants and get food delivered right to your dorm or study spot.
+              </p>
+              <div className="grid md:grid-cols-2 gap-6 max-w-lg mx-auto">
+                <Link href="/auth/student/signup">
+                  <Button 
+                    className="bg-white/20 backdrop-blur-md border border-white/30 text-white py-4 px-8 rounded-xl font-semibold hover:bg-white/30 transition-all card-hover w-full h-auto"
+                    data-testid="student-signup-button"
+                  >
+                    <GraduationCap className="mr-3" />
+                    I'm a Student
+                  </Button>
+                </Link>
+                <Link href="/auth/restaurant/signup">
+                  <Button 
+                    className="bg-white/20 backdrop-blur-md border border-white/30 text-white py-4 px-8 rounded-xl font-semibold hover:bg-white/30 transition-all card-hover w-full h-auto"
+                    data-testid="restaurant-signup-button"
+                  >
+                    <Store className="mr-3" />
+                    I'm a Restaurant
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
