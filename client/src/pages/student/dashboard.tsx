@@ -83,13 +83,13 @@ export default function StudentDashboard() {
   return (
     <main className="pt-16 min-h-screen bg-background" data-testid="student-dashboard">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 py-16">
-        <div className="absolute inset-0 opacity-40">
-          <div className="w-full h-full bg-orange-100 bg-opacity-20"></div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 py-16">
+        <div className="absolute inset-0 opacity-20">
+          <div className="w-full h-full bg-orange-200"></div>
         </div>
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-orange-600 mb-4">
+            <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-medium text-orange-600 mb-4 border border-orange-200 shadow-sm">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
               Campus Delivery Available
             </div>
@@ -102,9 +102,9 @@ export default function StudentDashboard() {
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <div className="glass rounded-full px-6 py-3 flex items-center gap-2">
+              <div className="bg-white rounded-full px-6 py-3 flex items-center gap-2 border border-orange-200 shadow-sm">
                 <MapPin className="w-4 h-4 text-orange-600" />
-                <span className="text-sm font-medium">Free Campus Delivery</span>
+                <span className="text-sm font-medium text-gray-700">Free Campus Delivery</span>
               </div>
               <Button
                 onClick={() => setIsCartOpen(true)}
@@ -130,12 +130,12 @@ export default function StudentDashboard() {
                 placeholder="Search restaurants, cuisines, or dishes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-4 py-4 text-lg border-2 border-orange-200 rounded-2xl bg-white/90 backdrop-blur-sm focus:border-orange-400 focus:bg-white shadow-lg"
+                className="pl-12 pr-4 py-4 text-lg border-2 border-orange-200 rounded-2xl bg-white focus:border-orange-400 shadow-lg text-gray-900"
                 data-testid="search-input"
               />
             </div>
             <Select value={selectedCuisine} onValueChange={setSelectedCuisine} data-testid="cuisine-filter">
-              <SelectTrigger className="lg:w-48 py-4 border-2 border-orange-200 rounded-2xl bg-white/90 backdrop-blur-sm text-gray-700">
+              <SelectTrigger className="lg:w-48 py-4 border-2 border-orange-200 rounded-2xl bg-white text-gray-700">
                 <SelectValue placeholder="All Cuisines" />
               </SelectTrigger>
               <SelectContent>
@@ -147,7 +147,7 @@ export default function StudentDashboard() {
             </Select>
             <Button
               onClick={() => setIsFilterOpen(true)}
-              className="py-4 px-6 rounded-2xl bg-white/90 backdrop-blur-sm border-2 border-orange-200 text-gray-700 hover:bg-white hover:border-orange-400 transition-all duration-300"
+              className="py-4 px-6 rounded-2xl bg-white border-2 border-orange-200 text-gray-700 hover:bg-orange-50 hover:border-orange-400 transition-all duration-300"
               variant="outline"
               data-testid="filter-button"
             >
@@ -161,20 +161,20 @@ export default function StudentDashboard() {
       {/* Quick Stats */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
-            <div className="text-3xl font-bold text-gradient">{filteredRestaurants.length}</div>
+          <div className="bg-white rounded-2xl p-6 text-center border border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold text-orange-600">{filteredRestaurants.length}</div>
             <div className="text-gray-600 font-medium mt-1">Restaurants</div>
           </div>
-          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow-green transition-all duration-300">
-            <div className="text-3xl font-bold text-gradient-green">15-45</div>
+          <div className="bg-white rounded-2xl p-6 text-center border border-green-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold text-green-600">15-45</div>
             <div className="text-gray-600 font-medium mt-1">Min Delivery</div>
           </div>
-          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
-            <div className="text-3xl font-bold text-gradient">Free</div>
+          <div className="bg-white rounded-2xl p-6 text-center border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold text-blue-600">Free</div>
             <div className="text-gray-600 font-medium mt-1">Campus Delivery</div>
           </div>
-          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
-            <div className="text-3xl font-bold text-gradient">4.5★</div>
+          <div className="bg-white rounded-2xl p-6 text-center border border-yellow-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold text-yellow-600">4.5★</div>
             <div className="text-gray-600 font-medium mt-1">Avg Rating</div>
           </div>
         </div>
