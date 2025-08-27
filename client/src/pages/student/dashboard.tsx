@@ -35,7 +35,7 @@ export default function StudentDashboard() {
   const filteredRestaurants = restaurants.filter((restaurant: Restaurant) => {
     const matchesSearch = restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          restaurant.cuisine.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCuisine = !cuisineFilter || restaurant.cuisine === cuisineFilter;
+    const matchesCuisine = !cuisineFilter || cuisineFilter === 'all' || restaurant.cuisine === cuisineFilter;
     return matchesSearch && matchesCuisine;
   });
 
@@ -93,7 +93,7 @@ export default function StudentDashboard() {
                 <SelectValue placeholder="All Cuisines" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Cuisines</SelectItem>
+                <SelectItem value="all">All Cuisines</SelectItem>
                 <SelectItem value="Indian">Indian</SelectItem>
                 <SelectItem value="Chinese">Chinese</SelectItem>
                 <SelectItem value="Italian">Italian</SelectItem>
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Default</SelectItem>
+                <SelectItem value="default">Default</SelectItem>
                 <SelectItem value="rating">Rating</SelectItem>
                 <SelectItem value="delivery">Delivery Time</SelectItem>
                 <SelectItem value="price">Price</SelectItem>
