@@ -1,239 +1,121 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* Modern vibrant color palette for food delivery */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    
-    /* Vibrant orange-red primary for food/appetite appeal */
-    --primary: 14 100% 57%;
-    --primary-foreground: 0 0% 100%;
-    
-    /* Warm secondary colors */
-    --secondary: 24 100% 95%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    
-    --muted: 210 40% 98%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 14 100% 95%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 14 100% 57%;
-    --radius: 0.75rem;
-    
-    /* Custom food-themed colors */
-    --success: 142 76% 36%;
-    --warning: 38 92% 50%;
-    --info: 199 89% 48%;
-    
-    /* Gradient variables */
-    --gradient-primary: linear-gradient(135deg, hsl(14 100% 57%) 0%, hsl(24 100% 50%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(172 66% 50%) 100%);
-    --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
-  }
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(224, 71%, 4%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(224, 71%, 4%);
+  --primary: hsl(220, 91%, 60%);
+  --primary-foreground: hsl(210, 20%, 98%);
+  --secondary: hsl(142, 76%, 36%);
+  --secondary-foreground: hsl(210, 20%, 98%);
+  --accent: hsl(43, 96%, 56%);
+  --accent-foreground: hsl(210, 20%, 98%);
+  --muted: hsl(220, 14%, 96%);
+  --muted-foreground: hsl(220, 8%, 46%);
+  --border: hsl(220, 13%, 91%);
+  --input: hsl(220, 13%, 91%);
+  --ring: hsl(220, 91%, 60%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 20%, 98%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(224, 71%, 4%);
+  --sidebar: hsl(180, 6.6667%, 97.0588%);
+  --sidebar-foreground: hsl(210, 25%, 7.8431%);
+  --sidebar-primary: hsl(203.8863, 88.2845%, 53.1373%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(211.5789, 51.3514%, 92.7451%);
+  --sidebar-accent-foreground: hsl(203.8863, 88.2845%, 53.1373%);
+  --sidebar-border: hsl(205.0000, 25.0000%, 90.5882%);
+  --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+  --font-sans: 'Inter', 'Open Sans', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 14 100% 57%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 14 100% 57%;
-  }
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(200, 6.6667%, 91.1765%);
+  --card: hsl(228, 9.8039%, 10%);
+  --card-foreground: hsl(0, 0%, 85.0980%);
+  --primary: hsl(220, 91%, 60%);
+  --primary-foreground: hsl(210, 20%, 98%);
+  --secondary: hsl(142, 76%, 36%);
+  --secondary-foreground: hsl(210, 20%, 98%);
+  --accent: hsl(43, 96%, 56%);
+  --accent-foreground: hsl(210, 20%, 98%);
+  --muted: hsl(0, 0%, 9.4118%);
+  --muted-foreground: hsl(210, 3.3898%, 46.2745%);
+  --border: hsl(210, 5.2632%, 14.9020%);
+  --input: hsl(207.6923, 27.6596%, 18.4314%);
+  --ring: hsl(220, 91%, 60%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 20%, 98%);
+  --popover: hsl(0, 0%, 0%);
+  --popover-foreground: hsl(200, 6.6667%, 91.1765%);
+  --sidebar: hsl(228, 9.8039%, 10%);
+  --sidebar-foreground: hsl(0, 0%, 85.0980%);
+  --sidebar-primary: hsl(220, 91%, 60%);
+  --sidebar-primary-foreground: hsl(210, 20%, 98%);
+  --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
+  --sidebar-accent-foreground: hsl(203.7736, 87.6033%, 52.5490%);
+  --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
+  --sidebar-ring: hsl(220, 91%, 60%);
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-  
+
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: #ffffff;
-    min-height: 100vh;
-  }
-
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-    border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary));
-    border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--primary) / 0.8);
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-sans);
   }
 }
 
-@layer components {
-  /* Glassmorphism effect */
-  .glass {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Gradient buttons */
-  .btn-gradient {
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    transition: all 0.3s ease;
-  }
-
-  .btn-gradient:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(251, 113, 83, 0.4);
-  }
-
-  /* Animated food cards */
-  .food-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-
-  .food-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Floating animation */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-
-  .float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  /* Pulse animation for loading states */
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(251, 113, 83, 0.3); }
-    50% { box-shadow: 0 0 30px rgba(251, 113, 83, 0.6); }
-  }
-
-  .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  /* Modern input styling */
-  .modern-input {
-    @apply bg-white/80 backdrop-blur-sm border-2 border-transparent focus:border-primary focus:bg-white transition-all duration-300 rounded-xl;
-  }
-
-  /* Badge styles */
-  .badge-gradient {
-    background: linear-gradient(45deg, hsl(142 76% 36%), hsl(172 66% 50%));
-    color: white;
-    font-weight: 600;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-  }
-
-  /* Restaurant card hover effects */
-  .restaurant-card {
-    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
-    border-radius: 24px;
-    overflow: hidden;
-    background: var(--gradient-card);
-  }
-
-  .restaurant-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(251, 113, 83, 0.05) 0%, rgba(251, 146, 60, 0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-  }
-
-  .restaurant-card:hover::before {
-    opacity: 1;
-  }
-
-  /* Menu item cards */
-  .menu-item-card {
-    @apply bg-white/90 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:shadow-lg hover:bg-white border border-orange-100;
-  }
-
-  /* Success states */
-  .success-gradient {
-    background: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(172 66% 50%) 100%);
-  }
+/* Custom styles */
+.hero-gradient {
+  background: linear-gradient(135deg, hsl(220, 91%, 60%) 0%, hsl(142, 76%, 36%) 50%, hsl(43, 96%, 56%) 100%);
 }
 
-@layer utilities {
-  /* Text gradients */
-  .text-gradient {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
 
-  .text-gradient-green {
-    background: var(--gradient-secondary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.7);
+}
 
-  /* Shadow utilities */
-  .shadow-soft {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  }
+.card-hover {
+  transition: all 0.3s ease;
+}
 
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(251, 113, 83, 0.2);
-  }
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-  .shadow-glow-green {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+.dark .card-hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.status-badge {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile bottom navigation padding */
+.mobile-nav-padding {
+  padding-bottom: 80px;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav-padding {
+    padding-bottom: 0;
   }
 }
