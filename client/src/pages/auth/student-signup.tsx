@@ -18,15 +18,14 @@ export default function StudentSignup() {
   const { toast } = useToast();
   const { login } = useAuth();
   
-  const form = useForm<StudentSignup>({
+  const form = useForm({
     resolver: zodResolver(studentSignupSchema),
     defaultValues: {
       email: "",
       password: "",
       name: "",
       studentId: "",
-      role: "student",
-      isVerified: false,
+      role: "student" as const,
     },
   });
 
@@ -52,8 +51,8 @@ export default function StudentSignup() {
     },
   });
 
-  const onSubmit = (data: StudentSignup) => {
-    signupMutation.mutate(data);
+  const onSubmit = (data: any) => {
+    signupMutation.mutate(data as StudentSignup);
   };
 
   return (

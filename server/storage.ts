@@ -68,7 +68,7 @@ export class DatabaseStorage implements IStorage {
 
       console.log("Seeding database with initial data...");
     } catch (error) {
-      console.log("Database seeding error (continuing with app):", error.message);
+      console.log("Database seeding error (continuing with app):", (error as Error).message);
     }
   }
 
@@ -153,7 +153,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
-    const [order] = await this.db.insert(orders).values(insertOrder).returning();
+    const [order] = await this.db.insert(orders).values([insertOrder]).returning();
     return order;
   }
 
@@ -339,6 +339,9 @@ export class MemStorage implements IStorage {
     const user: User = {
       ...insertUser,
       id,
+      phone: insertUser.phone || null,
+      isVerified: insertUser.isVerified || null,
+      emailVerified: insertUser.emailVerified || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -364,6 +367,12 @@ export class MemStorage implements IStorage {
     const restaurant: Restaurant = {
       ...insertRestaurant,
       id,
+      description: insertRestaurant.description || null,
+      imageUrl: insertRestaurant.imageUrl || null,
+      rating: insertRestaurant.rating || null,
+
+      isVerified: insertRestaurant.isVerified || null,
+      preparationTime: insertRestaurant.preparationTime || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -394,6 +403,14 @@ export class MemStorage implements IStorage {
     const item: MenuItem = {
       ...insertItem,
       id,
+      description: insertItem.description || null,
+      imageUrl: insertItem.imageUrl || null,
+      preparationTime: insertItem.preparationTime || null,
+      dietaryTags: insertItem.dietaryTags || null,
+      allergens: insertItem.allergens || null,
+      nutritionInfo: insertItem.nutritionInfo || null,
+      spiceLevel: insertItem.spiceLevel || null,
+      discount: insertItem.discount || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -434,6 +451,14 @@ export class MemStorage implements IStorage {
       ...insertOrder,
       id,
       orderNumber,
+      rating: insertOrder.rating || null,
+      deliveryFee: insertOrder.deliveryFee || "30",
+      discount: insertOrder.discount || "0",
+
+      estimatedDeliveryTime: insertOrder.estimatedDeliveryTime || null,
+      actualDeliveryTime: insertOrder.actualDeliveryTime || null,
+
+      review: insertOrder.review || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
