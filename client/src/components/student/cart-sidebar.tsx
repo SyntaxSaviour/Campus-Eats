@@ -237,11 +237,15 @@ export function CartSidebar({
                         <SelectValue placeholder="Select dormitory" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Ganga Hostel">Ganga Hostel</SelectItem>
-                        <SelectItem value="Yamuna Hostel">Yamuna Hostel</SelectItem>
-                        <SelectItem value="Kaveri Hostel">Kaveri Hostel</SelectItem>
-                        <SelectItem value="Narmada Hostel">Narmada Hostel</SelectItem>
-                        <SelectItem value="Godavari Hostel">Godavari Hostel</SelectItem>
+                        <SelectItem value="Kaari">Kaari</SelectItem>
+                        <SelectItem value="Paari">Paari</SelectItem>
+                        <SelectItem value="Oori">Oori</SelectItem>
+                        <SelectItem value="Adhiyaman">Adhiyaman</SelectItem>
+                        <SelectItem value="Agasthiyar">Agasthiyar</SelectItem>
+                        <SelectItem value="Nelson Mandela">Nelson Mandela</SelectItem>
+                        <SelectItem value="Sannasi">Sannasi</SelectItem>
+                        <SelectItem value="Manoranjitham">Manoranjitham</SelectItem>
+                        <SelectItem value="Mullai">Mullai</SelectItem>
                       </SelectContent>
                     </Select>
                     
