@@ -13,21 +13,6 @@ CampusEats is a web application that enables students to order food from campus 
 - Campus-specific delivery features
 
 
-# Screenshots
-
-**Landing Page**
-![Landing Page]("assets/screenshot1.png",width="400")
-
-**SignUp Page**
-![SignUp Page](assets/screenshot2.png)
-
-**Dashboard**
-![Dashboard Page](assets/screenshot4.png)
-
-**Payment Page**
-![Payment Page](assets/screenshot6.png)
-
-
 # Tech Stack
 
 **Frontedn:** Lovable.dev, Replit, React, Tailwind CSS
@@ -82,6 +67,21 @@ CampusEats is a web application that enables students to order food from campus 
 - Register your restaurant
 - Manage menus and update availability
 - Track and fulfill student orders
+
+
+# Screenshots
+
+![Landing Page](assets/screenshot1.png)
+
+
+![SignUp Page](assets/screenshot2.png)
+
+
+![Dashboard Page](assets/screenshot4.png)
+
+
+![Payment Page](assets/screenshot6.png)
+
 
 
 # Contributing
