@@ -67,6 +67,7 @@ CampusEats is a web application that enables students to order food from campus 
 - Browse campus restaurants and meals
 - Place orders and pay via Stripe
 - Track delivery status in real-time
+
 **Restaurant Owner**
 - Register your restaurant
 - Manage menus and update availability
