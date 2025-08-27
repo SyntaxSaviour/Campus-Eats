@@ -153,7 +153,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
-    const [order] = await this.db.insert(orders).values([insertOrder]).returning();
+    const orderData = {
+      ...insertOrder,
+      orderNumber: `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+    const [order] = await this.db.insert(orders).values(orderData).returning();
     return order;
   }
 
@@ -227,6 +231,9 @@ export class MemStorage implements IStorage {
       minimumOrder: 0,
       deliveryFee: 0,
       preparationTime: 30,
+      stripeAccountId: null,
+      stripeAccountStatus: "pending",
+      commissionRate: "0.15",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -252,6 +259,9 @@ export class MemStorage implements IStorage {
       minimumOrder: 0,
       deliveryFee: 0,
       preparationTime: 30,
+      stripeAccountId: null,
+      stripeAccountStatus: "pending",
+      commissionRate: "0.15",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -370,9 +380,18 @@ export class MemStorage implements IStorage {
       description: insertRestaurant.description || null,
       imageUrl: insertRestaurant.imageUrl || null,
       rating: insertRestaurant.rating || null,
-
-      isVerified: insertRestaurant.isVerified || null,
-      preparationTime: insertRestaurant.preparationTime || null,
+      address: insertRestaurant.address || null,
+      coverImageUrl: insertRestaurant.coverImageUrl || null,
+      operatingHours: insertRestaurant.operatingHours || null,
+      isActive: insertRestaurant.isActive ?? true,
+      isVerified: insertRestaurant.isVerified ?? false,
+      minimumOrder: insertRestaurant.minimumOrder || 0,
+      deliveryFee: insertRestaurant.deliveryFee || 0,
+      preparationTime: insertRestaurant.preparationTime || 30,
+      reviewCount: insertRestaurant.reviewCount || 0,
+      stripeAccountId: null,
+      stripeAccountStatus: "pending",
+      commissionRate: "0.15",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -405,12 +424,14 @@ export class MemStorage implements IStorage {
       id,
       description: insertItem.description || null,
       imageUrl: insertItem.imageUrl || null,
-      preparationTime: insertItem.preparationTime || null,
+      preparationTime: insertItem.preparationTime || 15,
       dietaryTags: insertItem.dietaryTags || null,
       allergens: insertItem.allergens || null,
       nutritionInfo: insertItem.nutritionInfo || null,
-      spiceLevel: insertItem.spiceLevel || null,
-      discount: insertItem.discount || null,
+      spiceLevel: insertItem.spiceLevel || 0,
+      isAvailable: insertItem.isAvailable ?? true,
+      isPopular: insertItem.isPopular ?? false,
+      discount: insertItem.discount || 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -454,11 +475,19 @@ export class MemStorage implements IStorage {
       rating: insertOrder.rating || null,
       deliveryFee: insertOrder.deliveryFee || "30",
       discount: insertOrder.discount || "0",
-
+      tax: insertOrder.tax || "0",
+      paymentStatus: insertOrder.paymentStatus || "pending",
+      paymentMethod: insertOrder.paymentMethod || null,
+      deliveryInstructions: insertOrder.deliveryInstructions || null,
       estimatedDeliveryTime: insertOrder.estimatedDeliveryTime || null,
       actualDeliveryTime: insertOrder.actualDeliveryTime || null,
-
+      specialInstructions: insertOrder.specialInstructions || null,
+      cancellationReason: insertOrder.cancellationReason || null,
       review: insertOrder.review || null,
+      stripePaymentIntentId: insertOrder.stripePaymentIntentId || null,
+      stripeTransferId: insertOrder.stripeTransferId || null,
+      platformFee: insertOrder.platformFee || null,
+      restaurantPayout: insertOrder.restaurantPayout || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

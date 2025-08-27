@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from 'wouter';
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface CartItem {
@@ -40,6 +41,7 @@ export function CartSidebar({
 }: CartSidebarProps) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [deliveryDetails, setDeliveryDetails] = useState({
     dormitory: "",
@@ -73,10 +75,10 @@ export function CartSidebar({
   const handleCheckout = async () => {
     if (items.length === 0) return;
     
-    if (!deliveryDetails.dormitory || !deliveryDetails.roomNumber) {
+    if (!deliveryDetails.dormitory || !deliveryDetails.roomNumber || !deliveryDetails.phoneNumber) {
       toast({
         title: "Missing delivery details",
-        description: "Please provide your dormitory and room number.",
+        description: "Please provide all required delivery information.",
         variant: "destructive",
       });
       return;
@@ -85,20 +87,30 @@ export function CartSidebar({
     const orderData = {
       studentId: user?.id || "",
       restaurantId: items[0].restaurantId, // Assuming single restaurant per order
-      orderItems: JSON.stringify(items.map(item => ({
+      orderItems: items.map(item => ({
         menuItemId: item.menuItemId,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-      }))),
+      })),
+      subtotal: total.toString(),
+      deliveryFee: "0",
+      tax: "0",
+      discount: "0",
       totalAmount: total.toString(),
       deliveryAddress: `${deliveryDetails.dormitory}, Room ${deliveryDetails.roomNumber}`,
       phoneNumber: deliveryDetails.phoneNumber,
       specialInstructions: deliveryDetails.specialInstructions,
       status: "placed",
+      paymentStatus: "pending",
     };
 
-    createOrderMutation.mutate(orderData);
+    // Save order data for checkout page
+    localStorage.setItem('checkoutData', JSON.stringify(orderData));
+    
+    // Navigate to checkout page
+    setLocation('/student/checkout');
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -300,12 +312,12 @@ export function CartSidebar({
               <div className="space-y-2">
                 <Button
                   onClick={handleCheckout}
-                  disabled={createOrderMutation.isPending}
+                  disabled={!deliveryDetails.dormitory || !deliveryDetails.roomNumber || !deliveryDetails.phoneNumber}
                   className="w-full bg-primary hover:bg-primary/90"
                   data-testid="place-order-button"
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
-                  {createOrderMutation.isPending ? "Placing Order..." : `Place Order - ₹${finalTotal}`}
+                  Proceed to Payment - ₹{finalTotal}
                 </Button>
                 <Button
                   variant="outline"

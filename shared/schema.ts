@@ -51,6 +51,9 @@ export const restaurants = pgTable("restaurants", {
   minimumOrder: integer("minimum_order").default(0),
   deliveryFee: integer("delivery_fee").default(0),
   preparationTime: integer("preparation_time").default(30), // in minutes
+  stripeAccountId: text("stripe_account_id"), // Stripe Connect account ID
+  stripeAccountStatus: text("stripe_account_status").default("pending"), // pending, active, restricted
+  commissionRate: decimal("commission_rate").default("0.15"), // Platform commission (15%)
   createdAt: timestamp("created_at").default(sql`now()`),
   updatedAt: timestamp("updated_at").default(sql`now()`),
 });
@@ -97,6 +100,10 @@ export const orders = pgTable("orders", {
   cancellationReason: text("cancellation_reason"),
   rating: integer("rating"), // 1-5 rating after delivery
   review: text("review"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  stripeTransferId: text("stripe_transfer_id"),
+  platformFee: decimal("platform_fee"),
+  restaurantPayout: decimal("restaurant_payout"),
   createdAt: timestamp("created_at").default(sql`now()`),
   updatedAt: timestamp("updated_at").default(sql`now()`),
 });

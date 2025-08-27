@@ -9,6 +9,14 @@ import {
   insertMenuItemSchema,
   insertOrderSchema
 } from "@shared/schema";
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2024-06-20",
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -178,6 +186,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error: any) {
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Stripe Connect routes
+  app.post("/api/restaurants/:id/create-connect-account", async (req, res) => {
+    try {
+      const restaurantId = req.params.id;
+      const restaurant = await storage.getRestaurant(restaurantId);
+      
+      if (!restaurant) {
+        return res.status(404).json({ message: "Restaurant not found" });
+      }
+
+      // Create Stripe Connect account
+      const account = await stripe.accounts.create({
+        type: 'express',
+        country: 'IN',
+        email: restaurant.name + '@campuseats.com',
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true },
+        },
+      });
+
+      // Update restaurant with Stripe account ID
+      await storage.updateRestaurant(restaurantId, {
+        stripeAccountId: account.id,
+        stripeAccountStatus: 'pending'
+      });
+
+      // Create account link for onboarding
+      const accountLink = await stripe.accountLinks.create({
+        account: account.id,
+        refresh_url: `${req.headers.origin}/restaurant/dashboard`,
+        return_url: `${req.headers.origin}/restaurant/dashboard`,
+        type: 'account_onboarding',
+      });
+
+      res.json({ accountLink: accountLink.url });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Payment Intent for orders with marketplace fee
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      const { orderId, amount, restaurantId } = req.body;
+      
+      const restaurant = await storage.getRestaurant(restaurantId);
+      if (!restaurant || !restaurant.stripeAccountId) {
+        return res.status(400).json({ message: "Restaurant Stripe account not set up" });
+      }
+
+      const platformFee = Math.round(amount * parseFloat(restaurant.commissionRate || "0.15"));
+      const restaurantAmount = amount - platformFee;
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: 'inr',
+        application_fee_amount: platformFee * 100,
+        transfer_data: {
+          destination: restaurant.stripeAccountId,
+        },
+        metadata: {
+          orderId,
+          restaurantId,
+          platformFee: platformFee.toString(),
+          restaurantAmount: restaurantAmount.toString(),
+        },
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        platformFee,
+        restaurantAmount
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error creating payment intent: " + error.message });
     }
   });
 

@@ -13,6 +13,7 @@ import RestaurantSignup from "@/pages/auth/restaurant-signup";
 import RestaurantLogin from "@/pages/auth/restaurant-login";
 import StudentDashboard from "@/pages/student/dashboard";
 import RestaurantDashboard from "@/pages/restaurant/dashboard";
+import Checkout from "@/pages/student/checkout";
 
 function ProtectedRoute({ 
   component: Component, 
@@ -44,6 +45,9 @@ function Router() {
       <Route path="/auth/restaurant/login" component={RestaurantLogin} />
       <Route path="/student/dashboard">
         <ProtectedRoute component={StudentDashboard} requiredRole="student" />
+      </Route>
+      <Route path="/student/checkout">
+        <ProtectedRoute component={Checkout} requiredRole="student" />
       </Route>
       <Route path="/restaurant/dashboard">
         <ProtectedRoute component={RestaurantDashboard} requiredRole="restaurant" />
