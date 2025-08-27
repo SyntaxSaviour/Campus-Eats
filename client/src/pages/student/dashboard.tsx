@@ -82,54 +82,60 @@ export default function StudentDashboard() {
 
   return (
     <main className="pt-16 min-h-screen bg-background" data-testid="student-dashboard">
-      {/* Header Section */}
-      <div className="bg-primary text-primary-foreground py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2" data-testid="welcome-message">
-                Welcome back, {user?.name}!
-              </h1>
-              <p className="text-primary-foreground/80">
-                Order delicious food from campus restaurants
-              </p>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 py-16">
+        <div className="absolute inset-0 opacity-40">
+          <div className="w-full h-full bg-orange-100 bg-opacity-20"></div>
+        </div>
+        <div className="relative max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-orange-600 mb-4">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              Campus Delivery Available
             </div>
-            <div className="mt-4 md:mt-0 flex items-center space-x-3">
-              <div className="bg-white/20 rounded-lg px-4 py-2 flex items-center">
-                <MapPin className="w-4 h-4 mr-2" />
-                <span className="text-sm">Campus Delivery</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-4" data-testid="welcome-message">
+              Hey {user?.name?.split(' ')[0] || 'Student'}! 
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+              Hungry? Let's get you some <span className="text-gradient font-semibold">delicious campus food</span> delivered right to your dorm!
+            </p>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <div className="glass rounded-full px-6 py-3 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-orange-600" />
+                <span className="text-sm font-medium">Free Campus Delivery</span>
               </div>
               <Button
-                variant="secondary"
                 onClick={() => setIsCartOpen(true)}
-                className="relative"
+                className="relative bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-none px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 data-testid="cart-button"
               >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Cart ({cartItemCount})
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                View Cart ({cartItemCount})
                 {cartItemCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground">
+                  <span className="absolute -top-2 -right-2 bg-white text-orange-600 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                     {cartItemCount}
-                  </Badge>
+                  </span>
                 )}
               </Button>
             </div>
           </div>
 
           {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col lg:flex-row gap-4 max-w-4xl mx-auto">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
-                placeholder="Search restaurants or cuisines..."
+                placeholder="Search restaurants, cuisines, or dishes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                className="pl-12 pr-4 py-4 text-lg border-2 border-orange-200 rounded-2xl bg-white/90 backdrop-blur-sm focus:border-orange-400 focus:bg-white shadow-lg"
                 data-testid="search-input"
               />
             </div>
             <Select value={selectedCuisine} onValueChange={setSelectedCuisine} data-testid="cuisine-filter">
-              <SelectTrigger className="w-full md:w-48 bg-white/10 border-white/20 text-white">
+              <SelectTrigger className="lg:w-48 py-4 border-2 border-orange-200 rounded-2xl bg-white/90 backdrop-blur-sm text-gray-700">
                 <SelectValue placeholder="All Cuisines" />
               </SelectTrigger>
               <SelectContent>
@@ -140,11 +146,12 @@ export default function StudentDashboard() {
               </SelectContent>
             </Select>
             <Button
-              variant="secondary"
               onClick={() => setIsFilterOpen(true)}
+              className="py-4 px-6 rounded-2xl bg-white/90 backdrop-blur-sm border-2 border-orange-200 text-gray-700 hover:bg-white hover:border-orange-400 transition-all duration-300"
+              variant="outline"
               data-testid="filter-button"
             >
-              <Filter className="w-4 h-4 mr-2" />
+              <Filter className="w-5 h-5 mr-2" />
               Filters
             </Button>
           </div>
@@ -152,32 +159,24 @@ export default function StudentDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-primary">{filteredRestaurants.length}</div>
-              <div className="text-sm text-muted-foreground">Available Restaurants</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">15-45</div>
-              <div className="text-sm text-muted-foreground">Delivery Time (min)</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">Free</div>
-              <div className="text-sm text-muted-foreground">Campus Delivery</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-600">4.5+</div>
-              <div className="text-sm text-muted-foreground">Average Rating</div>
-            </CardContent>
-          </Card>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
+            <div className="text-3xl font-bold text-gradient">{filteredRestaurants.length}</div>
+            <div className="text-gray-600 font-medium mt-1">Restaurants</div>
+          </div>
+          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow-green transition-all duration-300">
+            <div className="text-3xl font-bold text-gradient-green">15-45</div>
+            <div className="text-gray-600 font-medium mt-1">Min Delivery</div>
+          </div>
+          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
+            <div className="text-3xl font-bold text-gradient">Free</div>
+            <div className="text-gray-600 font-medium mt-1">Campus Delivery</div>
+          </div>
+          <div className="glass rounded-2xl p-6 text-center hover:shadow-glow transition-all duration-300">
+            <div className="text-3xl font-bold text-gradient">4.5★</div>
+            <div className="text-gray-600 font-medium mt-1">Avg Rating</div>
+          </div>
         </div>
 
         {/* Active Filters Display */}
