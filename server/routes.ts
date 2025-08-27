@@ -53,6 +53,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         deliveryTime: "30-45 min",
         priceForTwo: 500,
         imageUrl: "",
+        businessLicense: "TEMP-LICENSE",
+        campusLocation: "Main Campus",
       });
       
       // Don't send password back
@@ -137,6 +139,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         restaurantId: req.params.restaurantId,
       });
       
+      const menuItem = await storage.createMenuItem(menuItemData);
+      res.status(201).json(menuItem);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/menu-items", async (req, res) => {
+    try {
+      const menuItemData = insertMenuItemSchema.parse(req.body);
       const menuItem = await storage.createMenuItem(menuItemData);
       res.status(201).json(menuItem);
     } catch (error: any) {

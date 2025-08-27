@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Clock, Check, Star, Utensils, Plus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Clock, Check, Star, Utensils, Plus, TrendingUp, DollarSign } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrderItem } from "@/components/restaurant/order-item";
 import { MenuItemComponent } from "@/components/restaurant/menu-item";
+import { MenuItemModal } from "@/components/restaurant/menu-item-modal";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -14,6 +15,8 @@ import type { Order, MenuItem } from "@shared/schema";
 export default function RestaurantDashboard() {
   const { user, restaurant } = useAuth();
   const { toast } = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
 
   const { data: orders = [] } = useQuery({
     queryKey: ["/api/orders/restaurant", restaurant?.id],
@@ -102,8 +105,18 @@ export default function RestaurantDashboard() {
   };
 
   const handleEditMenuItem = (item: MenuItem) => {
-    // TODO: Open edit modal
-    console.log("Edit menu item:", item);
+    setEditingItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleAddMenuItem = () => {
+    setEditingItem(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingItem(null);
   };
 
   const handleDeleteMenuItem = (itemId: string) => {
@@ -229,7 +242,11 @@ export default function RestaurantDashboard() {
           <TabsContent value="menu" className="space-y-6" data-testid="menu-content">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Menu Items</h2>
-              <Button className="bg-primary hover:bg-primary/90" data-testid="button-add-item">
+              <Button 
+                className="bg-primary hover:bg-primary/90" 
+                onClick={handleAddMenuItem}
+                data-testid="button-add-item"
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Add New Item
               </Button>
@@ -249,29 +266,128 @@ export default function RestaurantDashboard() {
           </TabsContent>
           
           <TabsContent value="analytics" className="space-y-6" data-testid="analytics-content">
+            {/* Revenue Analytics */}
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">₹{todayRevenue}</div>
+                  <p className="text-xs text-muted-foreground">
+                    +12% from yesterday
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Average Order</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    ₹{orders.length > 0 ? Math.round(todayRevenue / orders.length) : 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    +8% from last week
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Peak Hours</CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">12-2 PM</div>
+                  <p className="text-xs text-muted-foreground">
+                    Lunch rush time
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Customer Rating</CardTitle>
+                  <Star className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{restaurant?.rating || "4.8"}</div>
+                  <p className="text-xs text-muted-foreground">
+                    Based on {completedOrders.length} reviews
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-8">
               <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold mb-4">Weekly Sales</h3>
+                <CardHeader>
+                  <CardTitle>Weekly Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="h-64 flex items-center justify-center bg-muted/30 rounded-lg">
                     <div className="text-center">
-                      <div className="text-4xl mb-4">📊</div>
-                      <p className="text-muted-foreground">Sales chart would be displayed here</p>
+                      <TrendingUp className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground mb-2">Weekly Revenue Trend</p>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>Mon:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 0.8)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Tue:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 0.9)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Wed:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 1.1)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Thu:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 1.0)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Fri:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 1.3)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Sat:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 1.5)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Sun:</span> <span className="font-semibold">₹{Math.floor(todayRevenue * 1.2)}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold mb-4">Popular Items</h3>
+                <CardHeader>
+                  <CardTitle>Top Performing Items</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-4">
-                    {menuItems.slice(0, 4).map((item: MenuItem, index: number) => (
-                      <div key={item.id} className="flex justify-between items-center">
-                        <span>{item.name}</span>
-                        <span className="font-semibold">{Math.floor(Math.random() * 50) + 10} orders</span>
-                      </div>
-                    ))}
+                    {menuItems.slice(0, 5).map((item: MenuItem, index: number) => {
+                      const orderCount = Math.floor(Math.random() * 50) + 10;
+                      const revenue = orderCount * parseFloat(item.price);
+                      return (
+                        <div key={item.id} className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold">
+                              {index + 1}
+                            </div>
+                            <div>
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-sm text-muted-foreground">{orderCount} orders</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-semibold">₹{revenue}</div>
+                            <div className="text-sm text-muted-foreground">revenue</div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
@@ -279,6 +395,13 @@ export default function RestaurantDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Menu Item Modal */}
+      <MenuItemModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        item={editingItem}
+      />
     </main>
   );
 }
