@@ -142,34 +142,48 @@ export default function Checkout() {
   const [platformFee, setPlatformFee] = useState(0);
   const [restaurantAmount, setRestaurantAmount] = useState(0);
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Get order data from localStorage (set by cart)
     const savedOrderData = localStorage.getItem('checkoutData');
     if (!savedOrderData) {
+      console.log('No checkout data found, redirecting to dashboard');
       setLocation('/student/dashboard');
       return;
     }
 
-    const orderInfo = JSON.parse(savedOrderData);
-    setOrderData(orderInfo);
+    try {
+      const orderInfo = JSON.parse(savedOrderData);
+      console.log('Checkout data loaded:', orderInfo);
+      setOrderData(orderInfo);
 
-    // Create PaymentIntent
-    apiRequest("POST", "/api/create-payment-intent", {
-      orderId: orderInfo.id || 'temp-' + Date.now(),
-      amount: parseFloat(orderInfo.totalAmount),
-      restaurantId: orderInfo.restaurantId,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-        setPlatformFee(data.platformFee);
-        setRestaurantAmount(data.restaurantAmount);
+      // Create PaymentIntent
+      apiRequest("POST", "/api/create-payment-intent", {
+        orderId: orderInfo.id || 'temp-' + Date.now(),
+        amount: parseFloat(orderInfo.totalAmount),
+        restaurantId: orderInfo.restaurantId,
       })
-      .catch((error) => {
-        console.error('Error creating payment intent:', error);
-        setLocation('/student/dashboard');
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('Payment intent created:', data);
+          setClientSecret(data.clientSecret);
+          setPlatformFee(data.platformFee);
+          setRestaurantAmount(data.restaurantAmount);
+        })
+        .catch((error) => {
+          console.error('Error creating payment intent:', error);
+          toast({
+            title: "Payment Setup Failed", 
+            description: "Unable to set up payment. Please try again.",
+            variant: "destructive"
+          });
+          // Don't redirect immediately, let user try again
+        });
+    } catch (error) {
+      console.error('Error parsing checkout data:', error);
+      setLocation('/student/dashboard');
+    }
   }, [setLocation]);
 
   if (!clientSecret || !orderData) {

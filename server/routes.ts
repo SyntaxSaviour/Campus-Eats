@@ -15,7 +15,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-07-30.basil",
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -230,26 +230,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Payment Intent for orders with marketplace fee
+  // Payment Intent for orders (simplified without marketplace for now)
   app.post("/api/create-payment-intent", async (req, res) => {
     try {
       const { orderId, amount, restaurantId } = req.body;
       
       const restaurant = await storage.getRestaurant(restaurantId);
-      if (!restaurant || !restaurant.stripeAccountId) {
-        return res.status(400).json({ message: "Restaurant Stripe account not set up" });
+      if (!restaurant) {
+        return res.status(400).json({ message: "Restaurant not found" });
       }
 
-      const platformFee = Math.round(amount * parseFloat(restaurant.commissionRate || "0.15"));
+      // Calculate platform fee (15%) but don't use marketplace for now
+      const platformFee = Math.round(amount * 0.15 * 100) / 100;
       const restaurantAmount = amount - platformFee;
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to cents
         currency: 'inr',
-        application_fee_amount: platformFee * 100,
-        transfer_data: {
-          destination: restaurant.stripeAccountId,
-        },
         metadata: {
           orderId,
           restaurantId,
@@ -264,6 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         restaurantAmount
       });
     } catch (error: any) {
+      console.error("Error creating payment intent:", error);
       res.status(500).json({ message: "Error creating payment intent: " + error.message });
     }
   });
