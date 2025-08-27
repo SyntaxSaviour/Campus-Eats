@@ -15,7 +15,7 @@ CampusEats is a web application that enables students to order food from campus 
 
 # Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](assets/screenshot1.png)
 
 
 # Tech Stack
@@ -32,7 +32,7 @@ CampusEats is a web application that enables students to order food from campus 
 
 # Getting Started
 
-## Installation
+**Installation**
 
 1. Clone the repository:
 ```bash
@@ -45,8 +45,7 @@ CampusEats is a web application that enables students to order food from campus 
   npm install
 ```
 
-## Configuration
-
+**Configuration**
 1. Create a .env file in the root directory with your API keys:
 ```ini
   SUPABASE_URL=your_supabase_url
@@ -55,7 +54,7 @@ CampusEats is a web application that enables students to order food from campus 
   STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 ```
 
-## Run Locally
+**Run Locally**
 ```bash
   npm run build
   npm run start
@@ -63,12 +62,12 @@ CampusEats is a web application that enables students to order food from campus 
 - Open your browser at http://localhost:3000
 # Usage Guide
 
-## Student
+**Student**
 - Register or log in with a valid .edu email
 - Browse campus restaurants and meals
 - Place orders and pay via Stripe
 - Track delivery status in real-time
-## Restaurant Owner
+**Restaurant Owner**
 - Register your restaurant
 - Manage menus and update availability
 - Track and fulfill student orders
