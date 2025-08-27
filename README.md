@@ -15,7 +15,10 @@ CampusEats is a web application that enables students to order food from campus 
 
 # Screenshots
 
-![App Screenshot]<img src="assets/screenshot.png" width="600">
+![Landing Page](assets/screenshot1.png)
+![SignUp Page](assets/screenshot2.png)
+![Dashboard Page](assets/screenshot4.png)
+![Payment Page](assets/screenshot6.png)
 
 
 # Tech Stack
